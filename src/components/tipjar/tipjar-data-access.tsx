@@ -108,7 +108,7 @@ export function useTipJar(authority: PublicKey) {
           tipper: provider.publicKey,
           tipJar: tipJarPda,
           systemProgram: SystemProgram.programId,
-        })
+        } as any)
         .rpc();
     },
     onSuccess: async (signature) => {
