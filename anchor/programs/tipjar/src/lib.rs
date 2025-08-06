@@ -13,9 +13,9 @@ pub mod tipjar {
         ctx: Context<InitializeTipjar>,
         name: String,
         description: String,
-        timestamp: i64,
     ) -> Result<()> {
         let tip_jar = &mut ctx.accounts.tip_jar;
+        let timestamp = Clock::get()?.unix_timestamp;
 
         tip_jar.authority = ctx.accounts.authority.key();
         tip_jar.name = name;
@@ -23,7 +23,6 @@ pub mod tipjar {
         tip_jar.total_tips = 0;
         tip_jar.tip_count = 0;
         tip_jar.timestamp = timestamp;
-        tip_jar.unique_id = timestamp as u64; // Use timestamp as unique ID
         tip_jar.bump = ctx.bumps.tip_jar;
 
         Ok(())
@@ -102,7 +101,6 @@ pub mod tipjar {
         let seeds = &[
             b"tip_jar",
             authority_key.as_ref(),
-            &tip_jar.unique_id.to_le_bytes(),
             &[tip_jar.bump],
         ];
         let _signer = &[&seeds[..]];
@@ -116,13 +114,11 @@ pub struct InitializeTipjar<'info> {
     #[account(mut)]
     pub authority: Signer<'info>,
 
-    pub timestamp: i64,
-
     #[account(
         init,
         payer = authority,
         space = 8 + TipJar::INIT_SPACE,
-        seeds = [b"tip_jar", authority.key().as_ref(), &timestamp.to_le_bytes()],
+        seeds = [b"tip_jar", authority.key().as_ref()],
         bump
     )]
     pub tip_jar: Account<'info, TipJar>,
@@ -137,7 +133,7 @@ pub struct SendTip<'info> {
 
     #[account(
         mut,
-        seeds = [b"tip_jar", tip_jar.authority.as_ref(), &tip_jar.unique_id.to_le_bytes()],
+        seeds = [b"tip_jar", tip_jar.authority.as_ref()],
         bump = tip_jar.bump
     )]
     pub tip_jar: Account<'info, TipJar>,
@@ -152,7 +148,7 @@ pub struct WithdrawTip<'info> {
 
     #[account(
         mut,
-        seeds = [b"tip_jar", authority.key().as_ref(), &tip_jar.unique_id.to_le_bytes()],
+        seeds = [b"tip_jar", authority.key().as_ref()],
         bump = tip_jar.bump
     )]
     pub tip_jar: Account<'info, TipJar>,
@@ -167,7 +163,7 @@ pub struct DeleteTipJar<'info> {
 
     #[account(
         mut,
-        seeds = [b"tip_jar", authority.key().as_ref(), &tip_jar.unique_id.to_le_bytes()],
+        seeds = [b"tip_jar", authority.key().as_ref()],
         bump = tip_jar.bump,
         close = authority
     )]
@@ -190,7 +186,6 @@ pub struct TipJar {
     pub total_tips: u64,
     pub tip_count: u64,
     pub timestamp: i64,
-    pub unique_id: u64,
 
     pub bump: u8,
 }
