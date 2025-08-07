@@ -46,7 +46,7 @@ function DefaultErrorFallback({ error, resetError }: { error?: Error; resetError
         <div className="text-4xl mb-4">🎯</div>
         <h2 className="text-xl font-semibold mb-2">No Tip Jar Found</h2>
         <p className="text-gray-600 mb-4 max-w-md">
-          This wallet doesn't have a tip jar yet. Create one using the form to get started!
+          This wallet doesn&apos;t have a tip jar yet. Create one using the form to get started!
         </p>
         <button
           onClick={resetError}
