@@ -1,8 +1,8 @@
 // Here we export some useful types and functions for interacting with the Anchor program.
 import { AnchorProvider, Program } from '@coral-xyz/anchor'
 import { Cluster, PublicKey } from '@solana/web3.js'
-import TipjarIDL from '../target/idl/tipjar.json'
-import type { Tipjar } from '../target/types/tipjar'
+import TipjarIDL from '../../src/lib/tipjar.json'
+import type { Tipjar } from '../../src/lib/tipjar'
 
 // Re-export the generated IDL and type
 export { Tipjar, TipjarIDL }
